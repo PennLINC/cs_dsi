@@ -8,7 +8,7 @@ Pipeline matched with paper sections
 ### 2.3 Preprocessing
 Preprocessing was performed using [QSIPrep](https://qsiprep.readthedocs.io/en/latest/) 0.4.0
 Command:
-```ps
+```s
 qsiprep $bids_folder> $der_folder> participant \
 --stop_on_first_crash -v -v \
 --b0-motion-corr-to iterative --b0_threshold 100 --b0_to_t1w_transform Rigid \
@@ -29,14 +29,14 @@ Script in `extrapolate_full_dsi.py`
 
 #### **GQI Reconstruction**
 GQI reconstruction was performed with DSIStudio
-```ps
+```s
 dsi_studio --action=src --source=${extrapolated_dsi}.nii.gz --output=${src_name}.src.gz #create src file for processing with DSI studio
 dsi_studio --action=rec --source=${src_name}.src.gz --method=4 --param0=1.25 --record_odf=0 --align_acpc=0 --check_btable=1 --output ${fib_name}.fib.gz #GQI reconstruction
 ```
 
 ### 2.5 Bundle segmentation
-```ps
-for trk in <track_list>; do
+```s
+for trk in $track_list; do
 dsi_studio --action=atk --source=${fib_name}.fib.gz --track_id=$trk --check_ending=0 --thread_count=1 #single thread count because parallelization fails in this version of DSIstudio
 trk_file=<.trk file generated from previous step>
 dsi_studio --action=ana --source=${fib_name}.fib.gz --tract=${trk_file}.tt.gz --output=${trk_file}_mask.nii.gz --thread_count=1 #make binary mask of bundle
