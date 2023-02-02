@@ -1,2 +1,2 @@
 # cs_dsi
-hamsi's awesome cs-dsi project
+Project folder for validating CS-DSI bundle segmentations and scalar maps. 
