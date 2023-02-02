@@ -9,7 +9,7 @@ Pipeline matched with paper sections
 Preprocessing was performed using [QSIPrep](https://qsiprep.readthedocs.io/en/latest/) 0.4.0
 Command:
 ```bash
-qsiprep $bids_folder> $der_folder> participant \
+qsiprep $bids_folder $der_folder participant \
 --stop_on_first_crash -v -v \
 --b0-motion-corr-to iterative --b0_threshold 100 --b0_to_t1w_transform Rigid \
 --dwi-denoise-window 5 \
@@ -29,13 +29,13 @@ Script in `extrapolate_full_dsi.py`
 
 #### **GQI Reconstruction**
 GQI reconstruction was performed with DSIStudio
-```s
+```bash
 dsi_studio --action=src --source=${extrapolated_dsi}.nii.gz --output=${src_name}.src.gz #create src file for processing with DSI studio
 dsi_studio --action=rec --source=${src_name}.src.gz --method=4 --param0=1.25 --record_odf=0 --align_acpc=0 --check_btable=1 --output ${fib_name}.fib.gz #GQI reconstruction
 ```
 
 ### 2.5 Bundle segmentation
-```s
+```bash
 for trk in $track_list; do
 dsi_studio --action=atk --source=${fib_name}.fib.gz --track_id=$trk --check_ending=0 --thread_count=1 #single thread count because parallelization fails in this version of DSIstudio
 trk_file=<.trk file generated from previous step>
