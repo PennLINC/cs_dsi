@@ -8,7 +8,7 @@ Pipeline matched with paper sections
 ### 2.3 Preprocessing
 Preprocessing was performed using [QSIPrep](https://qsiprep.readthedocs.io/en/latest/) 0.4.0
 Command:
-```s
+```bash
 qsiprep $bids_folder> $der_folder> participant \
 --stop_on_first_crash -v -v \
 --b0-motion-corr-to iterative --b0_threshold 100 --b0_to_t1w_transform Rigid \
