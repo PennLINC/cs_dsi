@@ -7,7 +7,7 @@ from dipy.io.image import load_nifti
 from scipy.stats import pearsonr
 grp = sys.argv[1] #Analysis group
 met = sys.argv[2] #metric
-tt = sys.argv[3] #tissue type: whole brain, or white matter only ("mask" or "wm")
+tt = "mask" #tissue type: whole brain (if you want just white matter, change to wm)
 
 def pairwise_r(img_path1, img_path2, mask_path):
     """
