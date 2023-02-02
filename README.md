@@ -36,6 +36,7 @@ dsi_studio --action=rec --source=${src_name}.src.gz --method=4 --param0=1.25 \
 ```
 
 ### 2.5 Bundle segmentation
+Using DSIStudio for automated fiber tracking (atk), and then making a binary of the track file generated.
 ```bash
 for trk in $track_list; do
 dsi_studio --action=atk --source=${fib_name}.fib.gz --track_id=$trk --check_ending=0 --thread_count=1 #single thread count because parallelization fails in this version of DSIstudio
@@ -43,5 +44,14 @@ dsi_studio --action=atk --source=${fib_name}.fib.gz --track_id=$trk --check_endi
 dsi_studio --action=ana --source=${fib_name}.fib.gz --tract=${trk_file}.tt.gz --output=${trk_file}_mask.nii.gz --thread_count=1 #make binary mask of bundle
 ```
 
+### 2.6 Making whole-brain scalar maps
+Using DSIStudio to generate whole-brain voxel-wise maps of NQA, GFA and ISO from the fib files
+```bash
+dsi_studio --action=exp --source=${fib_name}.fib.gz --export=nqa,gfa,iso
+```
 
+### 2.7 Statistical Testing
+**See `code/streamlines_main.md` for analysis steps specific to streamlines generated.**
+
+**See `code/scalars_main.md` for analysis steps specific to scalar maps generated.**
 
