@@ -16,28 +16,15 @@ subjects=["0001a", "1041h", "1665h", "2211h", "3058s", "4558a", "4936m", "0097p"
 if dtype == "streamlines":
     indir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/dice_scores/"
     odir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/dice_scores/permutation_stats/retro_btwn_rel/"
-    figdir = "/cbica/projects/csdsi/cleaned_paper_analysis/figs/dice_violins/permutation_stats/retro_btwn_rel/"
     der_met = "Dice Score"
-    ylim - [-0.05, 0.18]
-
-
 
 if dtype == "scalars":
     indir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/pearson_correlations/"
     odir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/pearson_correlations/permutation_stats/retro_btwn_rel/"
-    figdir = "/cbica/projects/csdsi/cleaned_paper_analysis/figs/pearson_violins/permutation_stats/retro_btwn_rel/"
     der_met = "PearsonR"
 
 
-if trc == "nqa_mask":
-    ylim = [-0.10, 0.10]
-if trc == "gfa_mask":
-    ylim = [-0.20, 0.08]
-if trc == "iso_mask":
-    ylim = [-0.015, 0.015]
-
 os.makedirs(odir+trc, exist_ok=True)
-os.makedirs(figdir+trc, exist_ok=True)
 
 def get_median_and_null(trc, sub, acq, nperms=1000):
     # Isolate subject and create dataframes:
@@ -122,45 +109,7 @@ def all_subs_single_trc(trc, nperms=1000):
 
         cs_median_df["Median Difference"] = med_arr
         cs_median_df["Acquisition"] = acq
-        all_sub_median_df = pd.concat([all_sub_median_df,cs_median_df])
-
-    all_sub_null_violin_df = all_sub_null_violin_df.replace(["HASC92-55_run-01", "HASC92-55_run-02",  "HASC92", "HASC55_run-01",  "HASC55_run-02"], 
-                            ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2"])
-    cat = pd.Categorical(all_sub_null_violin_df["Acquisition"], categories = ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2", "RAND57"])
-    all_sub_median_df = all_sub_median_df.replace(["HASC92-55_run-01", "HASC92-55_run-02",  "HASC92", "HASC55_run-01",  "HASC55_run-02"], 
-                            ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2"])
-    cat2 = pd.Categorical(all_sub_median_df["Acquisition"], categories = ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2", "RAND57"])
-
-
-    palette = ["#7781a6", "#477998", "#298e91", "#d24b4e", "#dd6d40", "#ffbf1f"]
-    all_sub_null_violin_df = all_sub_null_violin_df.assign(cat = cat)
-    hm = pn.ggplot(all_sub_null_violin_df, pn.aes(x=cat, y="Median Difference")) \
-        + pn.geom_violin(data = all_sub_null_violin_df, size = 1.0, scale = 'width', show_legend = False, trim=True, alpha=0.5, color = "black", fill = "gray", style = "left") \
-        + pn.theme_bw() \
-        + pn.theme(plot_title = pn.element_text(face="bold", size=16),
-                axis_title = pn.element_text(face="bold", size=14),
-                axis_text_x=pn.element_text(rotation=45, hjust=1, size=12, color="black"),
-                axis_text_y=pn.element_text(size=12, color="black"),
-                axis_ticks = pn.element_line(size = 0.2),
-                panel_border = pn.element_rect(fill = "white", colour="black"), \
-                panel_grid_major = pn.element_blank(),
-                panel_grid_minor = pn.element_blank()) \
-        + pn.ylab("Median Difference") \
-        + pn.labels.ggtitle(trc.replace("_", " ")) \
-        + pn.ylim(ylim[0], ylim[1])
-        
-
-    # Annotate actual median diff:
-    am = hm \
-        + pn.geom_violin(data = all_sub_median_df, mapping = pn.aes(x=cat2, y="Median Difference", color=cat2), fill="white", size = 1.0, scale = 'width', show_legend = False, trim=True, alpha=1.0, style = "right") \
-        + pn.geom_jitter(data = all_sub_median_df, mapping = pn.aes(x=cat2, y="Median Difference", fill=cat2), size=1.3, stroke=0.5, position=pn.position_jitter(0.1), show_legend=False) \
-        + pn.scale_color_manual(values=palette) \
-        + pn.scale_fill_manual(values=palette)
-
-    print(am)   
-    am.save(filename=figdir+trc+"/all_subs.svg", dpi=300)
-    am.save(filename=figdir+trc+"/all_subs.png", dpi=300)
-    
+        all_sub_median_df = pd.concat([all_sub_median_df,cs_median_df]) 
     
     return all_sub_null_violin_df, all_sub_median_df, all_sub_median_df_untidy, all_sub_p_df
 
