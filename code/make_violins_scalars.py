@@ -5,7 +5,7 @@ import plotnine as pn
 
 grp = sys.argv[1] #Analysis group
 met = sys.argv[2] #metric
-tt = sys.argv[3] #tissue type. "mask" = whole brain
+tt = "mask" #tissue type. "mask" = whole brain; "wm" = white matter only
 indir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/pearson_correlations/"+grp+"/"+met+"_"+tt+"/"
 fulldsi_df = pd.read_csv("/cbica/projects/csdsi/cleaned_paper_analysis/data/pearson_correlations/retro_fulldsi_btwn_rel/"+met+"_"+tt+"/all_subjects.csv")
 odir = "/cbica/projects/csdsi/cleaned_paper_analysis/figs/pearson_violins/"+grp+"/"+met+"_"+tt+"/"
