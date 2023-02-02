@@ -5,6 +5,7 @@ import plotnine as pn
 
 grp = sys.argv[1] #Analysis group
 trk = sys.argv[2] #Track
+plot = sys.argv[3] #Whether to plot or not
 indir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/dice_scores/"+grp+"/"+trk+"/"
 fulldsi_df = pd.read_csv("/cbica/projects/csdsi/cleaned_paper_analysis/data/dice_scores/retro_fulldsi_btwn_rel/"+trk+"/all_subjects.csv")
 odir = "/cbica/projects/csdsi/cleaned_paper_analysis/figs/dice_violins/"+grp+"/"+trk+"/"
@@ -108,32 +109,33 @@ def get_figure_specs(comb_df):
     return palette_col, palette_fill, cat, comb_df
         
 def main():
-    if os.path.exists(indir+"data_violin-friendly.casv") == False:
+    if os.path.exists(indir+"data_violin-friendly.csv") == False:
         make_violin_friendly_frames()
     comb_df = pd.read_csv(indir+"data_violin-friendly.csv")
-    palette_col, palette_fill, cat, comb_df = get_figure_specs(comb_df)
-    base = pn.ggplot(comb_df, pn.aes(x=cat, y="Dice", fill=cat, color=cat, stroke=2)) \
-        + pn.scale_fill_manual(values=palette_fill) \
-        + pn.scale_color_manual(values=palette_col) 
-    thme = base \
-        + pn.theme_bw() \
-        + pn.theme(plot_title = pn.element_text(face="bold", size=16), 
-                axis_title = pn.element_text(face="bold", size=14), 
-                axis_text_x=pn.element_text(rotation=45, hjust=1, size=12, color="black"), 
-                axis_text_y=pn.element_text(size=12, color="black"), 
-                axis_ticks = pn.element_line(size = 0.2), 
-                panel_border = pn.element_rect(fill = "white", colour="black"), 
-                panel_grid_major = pn.element_blank(), 
-                panel_grid_minor = pn.element_blank()) \
-        + pn.labels.xlab("Acquisition Scheme") \
-        + pn.labels.ylab("Dice Score") \
-        + pn.ylim(0,1)
-    fig = thme \
-        + pn.geom_violin(size = 1.5, data = comb_df, scale = 'width', show_legend = False, trim=True) \
-        + pn.geom_boxplot(width=0.2, fill="white", outlier_alpha=0, show_legend = False)
+    if plot == True:
+        palette_col, palette_fill, cat, comb_df = get_figure_specs(comb_df)
+        base = pn.ggplot(comb_df, pn.aes(x=cat, y="Dice", fill=cat, color=cat, stroke=2)) \
+            + pn.scale_fill_manual(values=palette_fill) \
+            + pn.scale_color_manual(values=palette_col) 
+        thme = base \
+            + pn.theme_bw() \
+            + pn.theme(plot_title = pn.element_text(face="bold", size=16), 
+                    axis_title = pn.element_text(face="bold", size=14), 
+                    axis_text_x=pn.element_text(rotation=45, hjust=1, size=12, color="black"), 
+                    axis_text_y=pn.element_text(size=12, color="black"), 
+                    axis_ticks = pn.element_line(size = 0.2), 
+                    panel_border = pn.element_rect(fill = "white", colour="black"), 
+                    panel_grid_major = pn.element_blank(), 
+                    panel_grid_minor = pn.element_blank()) \
+            + pn.labels.xlab("Acquisition Scheme") \
+            + pn.labels.ylab("Dice Score") \
+            + pn.ylim(0,1)
+        fig = thme \
+            + pn.geom_violin(size = 1.5, data = comb_df, scale = 'width', show_legend = False, trim=True) \
+            + pn.geom_boxplot(width=0.2, fill="white", outlier_alpha=0, show_legend = False)
 
-    fig.save(filename = odir+trk+"_notitle_y0-1.svg", dpi=500)
-    fig.save(filename = odir+trk+"_notitle_y0-1.png", dpi=500)
+        fig.save(filename = odir+trk+"_notitle_y0-1.svg", dpi=500)
+        fig.save(filename = odir+trk+"_notitle_y0-1.png", dpi=500)
 
 if __name__ == "__main__":
     main()
