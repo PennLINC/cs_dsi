@@ -45,9 +45,9 @@ python make_violins_streamlines.py $grp $trk False
 # done; done
 ```
 
-Get summary violin plot with all tracks. 
+Get summary violin plot with all tracks. *(for figures 6a, 6c, 7a, 9a)*
 ```bash
-python make_violins_streamlines.py $grp all_tracks
+python make_violins_streamlines.py $grp all_tracks True
 ```
 
 ### 4. Permutation Testing:
@@ -60,29 +60,13 @@ python stats_permute_retro_btwn_rel.py streamlines $trk
 done
 ```
 
-#### Get concatenated figures:
-Figures didn't make it to the supplementary, only tables did. Will probably comment out the section that makes the figures.
+#### Get summary stats:
 ```bash
-grps=( retro_wthn_acc retro_btwn_acc retro_btwn_rel )
-for grp in "${grps[@]}"; do
-python streamlines_permutation_stats.py $grp all_tracks
-done; done
+python streamlines_permutation_stats.py $grp 
 ```
 
 ### 4. Get relationships with full DSI reliability
-Calculating the collinearity between CS-DSI validity metrics and full DSI reliability.
+Calculating the collinearity between CS-DSI validity metrics and full DSI reliability *(for figures 6b, 6d, 7b, 9b)*
 ```bash
-grps=( retro_wthn_acc retro_btwn_acc retro_btwn_rel prosp_wthn_acc )
-for grp in "${grps[@]}"; do
-for mtrk in all_tracks; do
-python correlate_fullDSI_rel.py $grp $mtrk
-done; done
-```
-
-```bash
-grps=( retro_wthn_acc retro_btwn_acc retro_btwn_rel )
-for grp in "${grps[@]}"; do
-for mtrk in all_tracks no_fail_tracks; do
-python correlate_fullDSI_rel_permutations.py $grp $mtrk
-done; done
+python correlate_fullDSI_rel.py $grp
 ```
