@@ -77,3 +77,10 @@ acq = sys.argv[2]
 indir = sys.argv[3]
 odir = sys.argv[4]
 run_extrapolate_scheme(indir, sub, acq, odir)
+
+# # Example variables:
+# sub in 0001a 1041h 1665h 2211h 3058s 4558a 4936m 0097p 1043f 1808u 2453z 3571z 4662a 4961a 0444g 1142k 1853b 2741x 3832y 4680i 0798q 1145h 2027j 2755j 3992u 4917f
+# acq in HASC92 HASC55_run-01 HASC55_run-02 RAND57 HASC92-55_run-01 HASC92-55_run-02
+# indir = "/cbica/projects/csdsi/BIDS/qsiprep_unzipped/sub-"+sub+"/ses-1/dwi/"
+# odir = "/cbica/projects/csdsi/BIDS/derivatives/extrapolated/sub-"+sub+"/" # please edit so that you don't rewrite
+
