@@ -64,4 +64,12 @@ fi; done
 
 echo Ended at `date` 
 
+# Cubic call:
+# grp=crash_retro
+# mkdir -p /cbica/projects/csdsi/dsistudio_full/gridlog/dsistudio_bundles/${grp}
+# for sub in 0001a 1041h 1665h 2211h 3058s 4558a 4936m 0097p 1043f 1808u 2453z 3571z 4662a 4961a 0444g 1142k 1853b 2741x 3832y 4680i 1145h 2027j 2755j 3992u 4917f; do
+# for ses in 1 2 3 4 5 6 7 8; do
+# for acq in HASC92 HASC55_run-01 HASC55_run-02 RAND57 HASC92-55_run-01 HASC92-55_run-02 combined; do
+# qsub -o /cbica/projects/csdsi/dsistudio_full/gridlog/dsistudio_bundles/${grp}/sub-${sub}_ses-${ses}_acq-${acq}.txt -N ${acq}${sub}-${ses} -pe threaded 1 /cbica/projects/csdsi/BIDS/code/cleaned/dsistudio_bundles.sh $grp $sub $ses $acq
+# done; done; done
 
