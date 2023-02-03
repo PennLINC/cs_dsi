@@ -24,7 +24,8 @@ Just for this section, we add another analysis group: `retro_fulldsi_btwn_rel` t
 python get_pearson_correlations.py $grp $met
 ```
 
-### 2. Make violin plots *for figures 8 and 10*.
+### 2. Make violin plots 
+*figures 8 and 10*.
 ```bash
 python make_violins_scalars.py $grp $met
 ```
