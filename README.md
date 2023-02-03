@@ -50,7 +50,7 @@ dsi_studio --action=exp --source=${fib_name}.fib.gz --export=nqa,gfa,iso
 ```
 
 ### 2.7 Statistical Testing
-**See [code/streamlines_main.md](code/streamlines_main.md) for analysis steps specific to streamlines generated.**
+**See [code/streamlines_main.md](code/streamlines_main.md)  for analysis steps specific to streamlines generated.**
 
-**See [code/scalars_main.md](code/scalars_main.md) for analysis steps specific to scalar maps generated.**
+**See [code/scalars_main.md](code/scalars_main.md)  for analysis steps specific to scalar maps generated.**
 
