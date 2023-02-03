@@ -1,5 +1,5 @@
 # cs_dsi
-Project folder for validating CS-DSI bundle segmentations and scalar maps. 
+Project folder for validating CS-DSI bundle segmentations and scalar maps.
 
 Pipeline matched with paper sections
 
@@ -19,7 +19,7 @@ qsiprep $bids_folder $der_folder participant \
   --denoise-before-combining --force-spatial-normalization \
   --intramodal-template-transform BSplineSyN \
   --skull_strip_template OASIS \
-  --unringing-method mrdegibbs 
+  --unringing-method mrdegibbs
 ```
 
 ### 2.4 CS Reconstruction
@@ -33,6 +33,8 @@ dsi_studio --action=src --source=${extrapolated_dsi}.nii.gz --output=${src_name}
 dsi_studio --action=rec --source=${src_name}.src.gz --method=4 --param0=1.25 \
   --record_odf=0 --align_acpc=0 --check_btable=1 --output ${fib_name}.fib.gz #GQI reconstruction
 ```
+The full script for doing this step can be found here [code/dsistudio_src_fib_scalars.sh](code/dsistudio_src_fib_scalars.sh).
+This script also generates the scalar maps.
 
 ### 2.5 Bundle segmentation
 DSIStudio was used for automated fiber tracking (atk), and making a binary of the track file generated:
@@ -42,6 +44,7 @@ dsi_studio --action=atk --source=${fib_name}.fib.gz --track_id=$trk --check_endi
 #trk_file=.trk file generated from previous step
 dsi_studio --action=ana --source=${fib_name}.fib.gz --tract=${trk_file}.tt.gz --output=${trk_file}_mask.nii.gz --thread_count=1 #make binary mask of bundle
 ```
+The full scirpt for doing this step can be found here [code/dsistudio_bundles.sh](code/dsistudio_bundles.sh).
 
 ### 2.6 Making whole-brain scalar maps
 DSIStudio was used to generate whole-brain voxel-wise maps of NQA, GFA and ISO from the fib files:
