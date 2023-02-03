@@ -4,6 +4,7 @@ import numpy as np
 from dipy.segment.mask import median_otsu
 from dipy.core.gradients import gradient_table
 from brainsuite_shore import BrainSuiteShoreModel, brainsuite_shore_basis #direct download from github
+# CZ: ^^ this python script should be included in the github too!!
 import os
 import sys
 from dipy.io.image import load_nifti
@@ -39,11 +40,12 @@ def extrapolate_scheme(fit_obj, odir, acq, mask_array, mask_img):
     # Copy in the bval and bvecs
     bval_file = "/cbica/projects/csdsi/BIDS/qsiprep_unzipped/full_dsi.bval" #pass in full DSI scheme
     bvec_file = "/cbica/projects/csdsi/BIDS/qsiprep_unzipped/full_dsi.bvec"
-    shutil.copyfile(bval_file, output_bval_file)
+    shutil.copyfile(bval_file, output_bval_file)   # CZ: predicted bval, i.e., full DSI scheme
     shutil.copyfile(bvec_file, output_bvec_file)
 
     # Get prediction from odf fit:
     prediction_gtab = gradient_table(bvals=np.loadtxt(bval_file), bvecs=np.loadtxt(bvec_file).T, b0_threshold=10, big_delta=0.04684, small_delta=0.0305) 
+    # ^^ CZ: bvals and bvects to be predicted, in a full DSI scheme
     prediction_shore = brainsuite_shore_basis(fit_obj.model.radial_order, fit_obj.model.zeta,
                                               prediction_gtab, fit_obj.model.tau)
 
@@ -79,6 +81,7 @@ odir = sys.argv[4]
 run_extrapolate_scheme(indir, sub, acq, odir)
 
 # # Example variables:
+# CZ: `indir` below is for prosp dataset but sub IDs are retro. So just use prosp subject ID.
 # sub in 0001a 1041h 1665h 2211h 3058s 4558a 4936m 0097p 1043f 1808u 2453z 3571z 4662a 4961a 0444g 1142k 1853b 2741x 3832y 4680i 0798q 1145h 2027j 2755j 3992u 4917f
 # acq in HASC92 HASC55_run-01 HASC55_run-02 RAND57 HASC92-55_run-01 HASC92-55_run-02
 # indir = "/cbica/projects/csdsi/BIDS/qsiprep_unzipped/sub-"+sub+"/ses-1/dwi/"
