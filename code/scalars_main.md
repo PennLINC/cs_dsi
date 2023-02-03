@@ -21,20 +21,37 @@ Just for this section, we add another analysis group: `retro_fulldsi_btwn_rel` t
 
 ```bash
 #Bootstrap
-python get_pearson_correlations.py $grp $met
+grps=( retro_fulldsi_btwn_rel retro_wthn_acc retro_btwn_acc retro_btwn_rel prosp_wthn_acc )
+for grp in "${grps[@]}"; do
+mkdir -p /cbica/projects/csdsi/cleaned_paper_analysis/logs/get_pearson_correlations/${grp}
+for met in nqa gfa iso; do
+qsub -o /cbica/projects/csdsi/cleaned_paper_analysis/logs/get_pearson_correlations/${grp}/${met}_${tt}.txt -N ${grp}_${met} -pe threaded 1-2 /cbica/projects/csdsi/cleaned_paper_analysis/code/run_python_grid.sh get_pearson_correlations.py $grp $met 
+done; done; done
 ```
 
-### 2. Make violin plots 
-*figures 8 and 10*.
+### 2. Make violin plots.
+*Figures 8 and 10*
 ```bash
-python make_violins_scalars.py $grp $met
+grps=( retro_wthn_acc retro_btwn_acc retro_btwn_rel prosp_wthn_acc )
+for grp in "${grps[@]}"; do
+mkdir -p /cbica/projects/csdsi/cleaned_paper_analysis/logs/make_violins_scalars/${grp}
+for met in nqa gfa iso; do
+qsub -o /cbica/projects/csdsi/cleaned_paper_analysis/logs/make_violins_scalars/${grp}/${met}.txt -N ${grp}_${met} -pe threaded 1-2 /cbica/projects/csdsi/cleaned_paper_analysis/code/run_python_grid.sh make_violins_scalars.py $grp $met 
+done; done; done
 ```
 
 ### 3. Permutation Testing:
 ```bash
+mkdir -p /cbica/projects/csdsi/cleaned_paper_analysis/logs/stats_permute_retro_wthn_acc
 for met in nqa gfa iso; do
-python stats_permute_retro_wthn_acc.py scalars ${met}_mask
-python stats_permute_retro_btwn_acc.py scalars ${met}_mask
-python stats_permute_retro_btwn_rel.py scalars ${met}_mask
+qsub -o /cbica/projects/csdsi/cleaned_paper_analysis/logs/stats_permute_retro_wthn_acc/${met}.txt -N ${met} -pe threaded 1-2 /cbica/projects/csdsi/cleaned_paper_analysis/code/run_python_grid.sh stats_permute_retro_wthn_acc.py scalars ${met}_mask
+done
+mkdir -p /cbica/projects/csdsi/cleaned_paper_analysis/logs/stats_permute_retro_btwn_acc
+for met in nqa gfa iso; do
+qsub -o /cbica/projects/csdsi/cleaned_paper_analysis/logs/stats_permute_retro_btwn_acc/${met}.txt -N ${met} -pe threaded 1-2 /cbica/projects/csdsi/cleaned_paper_analysis/code/run_python_grid.sh stats_permute_retro_btwn_acc.py scalars ${met}_mask
+done
+mkdir -p /cbica/projects/csdsi/cleaned_paper_analysis/logs/stats_permute_retro_btwn_rel
+for met in nqa gfa iso; do
+qsub -o /cbica/projects/csdsi/cleaned_paper_analysis/logs/stats_permute_retro_btwn_rel/${met}.txt -N ${met} -pe threaded 1-2 /cbica/projects/csdsi/cleaned_paper_analysis/code/run_python_grid.sh stats_permute_retro_btwn_rel.py scalars ${met}_mask
 done
 ```
