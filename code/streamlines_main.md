@@ -1,5 +1,5 @@
 # Main analysis for streamlines:
-Documentation for all the analysis steps *after* creating the bundle specific masks in dsi-studio for all cases.
+Documentation for all the analysis steps *after* creating the bundle specific masks in dsi-studio for all cases. All datafiles created here will be within `/cbica/csdsi/cleaned_paper_analysis/data`
 
 Start with setting up our terminal:
 ```bash
@@ -8,7 +8,7 @@ conda activate flywheel
 trks=( Arcuate_Fasciculus_L Arcuate_Fasciculus_R Cingulum_Frontal_Parahippocampal_L Cingulum_Frontal_Parahippocampal_R Cingulum_Frontal_Parietal_L Cingulum_Frontal_Parietal_R Cingulum_Parahippocampal_L Cingulum_Parahippocampal_Parietal_L Cingulum_Parahippocampal_Parietal_R Cingulum_Parahippocampal_R Cingulum_Parolfactory_L Cingulum_Parolfactory_R Corpus_Callosum_Body Corpus_Callosum_Forceps_Major Corpus_Callosum_Forceps_Minor Corpus_Callosum_Tapetum Corticospinal_Tract_L Corticospinal_Tract_R Corticostriatal_Tract_Anterior_L Corticostriatal_Tract_Anterior_R Corticostriatal_Tract_Posterior_L Corticostriatal_Tract_Posterior_R Corticostriatal_Tract_Superior_L Corticostriatal_Tract_Superior_R Fornix_L Fornix_R Frontal_Aslant_Tract_L Frontal_Aslant_Tract_R Inferior_Fronto_Occipital_Fasciculus_L Inferior_Fronto_Occipital_Fasciculus_R Inferior_Longitudinal_Fasciculus_L Inferior_Longitudinal_Fasciculus_R Middle_Longitudinal_Fasciculus_L Middle_Longitudinal_Fasciculus_R Optic_Radiation_L Optic_Radiation_R Parietal_Aslant_Tract_L Parietal_Aslant_Tract_R Reticular_Tract_L Reticular_Tract_R Superior_Longitudinal_Fasciculus1_L Superior_Longitudinal_Fasciculus1_R Superior_Longitudinal_Fasciculus2_L Superior_Longitudinal_Fasciculus2_R Superior_Longitudinal_Fasciculus3_L Superior_Longitudinal_Fasciculus3_R Thalamic_Radiation_Anterior_L Thalamic_Radiation_Anterior_R Thalamic_Radiation_Posterior_L Thalamic_Radiation_Posterior_R Thalamic_Radiation_Superior_L Thalamic_Radiation_Superior_R Uncinate_Fasciculus_L Uncinate_Fasciculus_R Vertical_Occipital_Fasciculus_L Vertical_Occipital_Fasciculus_R ) #all tracks
 ```
 
-Most of the analysis steps here need to be slightly different for each validity metric, so we're usually coding that in an if-case within each python script:
+Most of the analysis steps here need to be slightly different for each of these four analysis sections (each validity metric), so we're usually coding that in an if-case within each python script:
 1. Retrospective data (CRASH): same-scan accuracy `retro_wthn_acc`
 1. Retrospective data (CRASH): inter-scan accuracy `retro_btwn_acc`
 1. Retrospective data (CRASH): inter-scan reliability `retro_btwn_rel`
@@ -26,47 +26,74 @@ Just for this section, we add another analysis group: `retro_fulldsi_btwn_rel` t
 
 ```bash
 #Bootstrap
-python get_dice_scores.py $grp $trk #where grp is the analysis group (validation metric) and trk is the desired track.
+grps=( retro_fulldsi_btwn_rel retro_wthn_acc retro_btwn_acc retro_btwn_rel prosp_wthn_acc )
+for grp in "${grps[@]}"; do
+mkdir -p /cbica/projects/csdsi/cleaned_paper_analysis/logs/get_dice_scores/${grp}
+for trk in "${trks[@]} "; do
+qsub -o /cbica/projects/csdsi/cleaned_paper_analysis/logs/get_dice_scores/${grp}/${trk}.txt -N ${grp}_${trk} -pe threaded 1-2 /cbica/projects/csdsi/cleaned_paper_analysis/code/run_python_grid.sh get_dice_scores.py $grp $trk
+done; done
 ```
 
 ### 2. Concatenate score sheets.
 The above step calculated the dice scores for each track, but we want summary figures for all tracks, so we put those CSVs together for ease. We do this in `concatenate_tracks.py`
 ```bash
+for grp in "${grps[@]}"; do
 python concatenate_tracks.py $grp all_tracks
+done; done
 ```
 
 ### 3. Make violin plots.
 Get violin plots for each track, comparing full DSI reliability with CS-DSI accuracy and reliability. We do this in `make_violins_streamlines.py`
-
 Even though we don't report individual track figures, we still run this script for individual tracks because it also makes violin-friendly CSVs for the next step. The last argument passed determines whether plots are made.
+
 ```bash
+# grps=( retro_wthn_acc retro_btwn_acc retro_btwn_rel prosp_wthn_acc )
+# for grp in "${grps[@]}"; do
+# mkdir -p /cbica/projects/csdsi/cleaned_paper_analysis/logs/make_violins_streamlines/${grp}
 # for trk in "${trks[@]} "; do
-python make_violins_streamlines.py $grp $trk False
+# qsub -o /cbica/projects/csdsi/cleaned_paper_analysis/logs/make_violins_streamlines/${grp}/${trk}.txt -N ${grp}_${trk} -pe threaded 1-2 /cbica/projects/csdsi/cleaned_paper_analysis/code/run_python_grid.sh make_violins_streamlines.py $grp $trk False
 # done; done
 ```
 
-Get summary violin plot with all tracks. *(for figures 6a, 6c, 7a, 9a)*
+Get summary violin plots for all tracks. This is what is gonna go in the paper. *Figures 6a, 6c, 7a, 9a*
+**Running this separately because the files are a lot bigger- needs about 125 GB to run**
 ```bash
+for grp in "${grps[@]}"; do
 python make_violins_streamlines.py $grp all_tracks True
+done
 ```
 
 ### 4. Permutation Testing:
 Permutation testing for each track to get p values. These results are just in the supplementary. The permutations for each case is different enough to warrant a separate script. Note that p values may change as the permutations do. Only performed for the retrospective data.
 ```bash
+mkdir -p /cbica/projects/csdsi/cleaned_paper_analysis/logs/stats_permute_retro_wthn_acc
 for trk in "${trks[@]}"; do
-python stats_permute_retro_wthn_acc.py streamlines $trk
-python stats_permute_retro_btwn_acc.py streamlines $trk
-python stats_permute_retro_btwn_rel.py streamlines $trk
+qsub -o /cbica/projects/csdsi/cleaned_paper_analysis/logs/stats_permute_retro_wthn_acc/${trk}.txt -N ${trk} -pe threaded 1-2 /cbica/projects/csdsi/cleaned_paper_analysis/code/run_python_grid.sh stats_permute_retro_wthn_acc.py streamlines $trk
+done
+mkdir -p /cbica/projects/csdsi/cleaned_paper_analysis/logs/stats_permute_retro_btwn_acc
+for trk in "${trks[@]}"; do
+qsub -o /cbica/projects/csdsi/cleaned_paper_analysis/logs/stats_permute_retro_btwn_acc/${trk}.txt -N ${trk} -pe threaded 1-2 /cbica/projects/csdsi/cleaned_paper_analysis/code/run_python_grid.sh stats_permute_retro_btwn_acc.py streamlines $trk
+done
+mkdir -p /cbica/projects/csdsi/cleaned_paper_analysis/logs/stats_permute_retro_btwn_rel
+for trk in "${trks[@]}"; do
+qsub -o /cbica/projects/csdsi/cleaned_paper_analysis/logs/stats_permute_retro_btwn_rel/${trk}.txt -N ${trk} -pe threaded 1-2 /cbica/projects/csdsi/cleaned_paper_analysis/code/run_python_grid.sh stats_permute_retro_btwn_rel.py streamlines $trk
 done
 ```
 
-#### Get summary stats:
+#### Get concatenated figures:
+Figures didn't make it to the supplementary, only tables did. Will probably comment out the section that makes the figures.
 ```bash
+grps=( retro_wthn_acc retro_btwn_acc retro_btwn_rel )
+for grp in "${grps[@]}"; do
 python streamlines_permutation_stats.py $grp 
+done; done
 ```
 
 ### 4. Get relationships with full DSI reliability
-Calculating the collinearity between CS-DSI validity metrics and full DSI reliability *(for figures 6b, 6d, 7b, 9b)*
+Calculating the collinearity between CS-DSI validity metrics and full DSI reliability.
 ```bash
-python correlate_fullDSI_rel.py $grp
+grps=( retro_wthn_acc retro_btwn_acc retro_btwn_rel prosp_wthn_acc )
+for grp in "${grps[@]}"; do
+python correlate_fullDSI_rel.py $grp 
+done
 ```
