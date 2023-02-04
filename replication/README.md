@@ -3,7 +3,8 @@ Replicator: Chenying Zhao
 
 # Current problems to fix:
 - `code/extrapolate_full_dsi.py` depends on `brainsuite_shore.py` but is not included in github repo.
-    - test: using that from `PennLINC/qsiprep/qsiprep/utils/brainsuite_shore.py` (master branch, last update: year 2019)
+    - test: using that from `PennLINC/qsiprep/qsiprep/utils/brainsuite_shore.py` and `shm.py` (which the `brainsuite_shore.py` depends on) (master branch, last update: year 2019)
+        - downloaded by `wget` from github -> raw
     - confirm with Hamsi and ask her to copy the version she used to `code/`
         - i then confirm that's the same of i'm using here
 
