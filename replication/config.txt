@@ -1,1 +1,2 @@
 conda_env_name="replication"
+python_full_path="/cbica/projects/csdsi/miniconda3/envs/replication/bin/python"
