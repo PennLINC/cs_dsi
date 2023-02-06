@@ -2,11 +2,7 @@ This is to replicate results reported in the manuscript.
 Replicator: Chenying Zhao
 
 # Current problems to fix:
-- `code/extrapolate_full_dsi.py` depends on `brainsuite_shore.py` but is not included in github repo.
-    - test: using that from `PennLINC/qsiprep/qsiprep/utils/brainsuite_shore.py` and `shm.py` (which the `brainsuite_shore.py` depends on) (master branch, last update: year 2019)
-        - downloaded by `wget` from github -> raw
-    - confirm with Hamsi and ask her to copy the version she used to `code/`
-        - i then confirm that's the same of i'm using here
+- table 1 - number of dir in cs-dsi scheme 
 
 # Overview
 Full list of instances:
@@ -21,6 +17,22 @@ Full list of instances:
     * inter-scan accuracy + retro dataset 
     * inter-scan reliability + retro dataset 
     * same-scan accuracy + prosp dataset
+
+# replication protocol
+1. read thru the script
+    - write comments for better understanding
+    - mark out the places i cannot understand
+    - compare with claims in the manuscript and README on the github
+        - check those details (e.g., parameters, method names) are the same
+1. run the script
+    - find the correct qsub
+1. check if the results
+    - as expected?
+    - the same as original?
+
+
+# Steps
+- [step2p4p1_extrapolate.md](step2p4p1_extrapolate.md)
 
 # Tricks
 ## Python on csdsi:
