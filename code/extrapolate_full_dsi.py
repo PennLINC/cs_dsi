@@ -4,7 +4,6 @@ import numpy as np
 from dipy.segment.mask import median_otsu
 from dipy.core.gradients import gradient_table
 from brainsuite_shore import BrainSuiteShoreModel, brainsuite_shore_basis #direct download from github
-# CZ: ^^ this python script should be included in the github too!!
 import os
 import sys
 from dipy.io.image import load_nifti
@@ -27,6 +26,7 @@ def get_mask(dwi_data, gtab, affine, header):
 
 def get_model_fit(data, gtab):
     odfmodel = BrainSuiteShoreModel(gtab, radial_order = 8, regularization='L2')
+    # ^^ CZ: param confirmed;
     odffit = odfmodel.fit(data)
     return odffit
 
@@ -55,6 +55,7 @@ def extrapolate_scheme(fit_obj, odir, acq, mask_array, mask_img):
     output_data[mask_array] = np.dot(shore_array, prediction_shore.T)
 
     nb.save(nb.Nifti1Image(output_data, mask_img.affine, mask_img.header), output_dwi_file)
+    # ^^ CZ: the `mask_img.header` has been set to use original dwi's header, in `get_mask()`
         
 def run_extrapolate_scheme(indir, sub, acq, odir):
     # Load data:

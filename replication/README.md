@@ -18,21 +18,10 @@ Full list of instances:
     * inter-scan reliability + retro dataset 
     * same-scan accuracy + prosp dataset
 
-# replication protocol
-1. read thru the script
-    - write comments for better understanding
-    - mark out the places i cannot understand
-    - compare with claims in the manuscript and README on the github
-        - check those details (e.g., parameters, method names) are the same
-1. run the script
-    - find the correct qsub
-1. check if the results
-    - as expected?
-    - the same as original?
-
 
 # Steps
 - [step2p4p1_extrapolate.md](step2p4p1_extrapolate.md)
+- [step2p4p2_GQI_recon.md](step2p4p2_GQI_recon.md)
 
 # Tricks
 ## Python on csdsi:
