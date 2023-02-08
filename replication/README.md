@@ -20,10 +20,13 @@ Full list of instances:
 
 
 # Steps
-- [step2p4p1_extrapolate.md](step2p4p1_extrapolate.md)
-- [step2p4p2_GQI_recon.md](step2p4p2_GQI_recon.md)
+- Step 2.4.1: [step2p4p1_extrapolate.md](step2p4p1_extrapolate.md)
+- Step 2.4.2: [step2p4p2_GQI_recon.md](step2p4p2_GQI_recon.md)
     - this also includes step 2.6 generate scalar maps
-- [step2p5_bundle_seg.md](step2p5_bundle_seg.md)
+- Step 2.5: [step2p5_bundle_seg.md](step2p5_bundle_seg.md)
+- Step 2.6 has been done in previous step
+- Step 2.7 quantification and statistical tests
+    - Step 2.7a: [step2p7p1_perm_streamlines.md](step2p7p1_perm_streamlines.md)
 
 # Tricks
 ## Python on csdsi:
