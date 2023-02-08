@@ -40,7 +40,8 @@ Get violin plots for each track, comparing full DSI reliability with CS-DSI accu
 
 Even though we don't report individual track figures, we still run this script for individual tracks because it also makes violin-friendly CSVs for the next step. The last argument passed determines whether plots are made.
 ```bash
-# for trk in "${trks[@]} "; do
+# for grp in "${grps[@]}"; do   # for each of 4 grps, e.g., `retro_wthn_acc`
+# for trk in "${trks[@]} "; do   # for each of all tracks
 python make_violins_streamlines.py $grp $trk False
 # done; done
 ```
@@ -65,7 +66,7 @@ done
 python streamlines_permutation_stats.py $grp 
 ```
 
-### 4. Get relationships with full DSI reliability
+### 5. Get relationships with full DSI reliability
 Calculating the collinearity between CS-DSI validity metrics and full DSI reliability *(for figures 6b, 6d, 7b, 9b)*
 ```bash
 python correlate_fullDSI_rel.py $grp
