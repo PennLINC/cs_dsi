@@ -22,11 +22,18 @@ echo JOB_NAME: $JOB_NAME
 echo JOB_ID: $JOB_ID
 echo JOB_SCRIPT: $JOB_SCRIPT
 script=$1
-code_path=/cbica/projects/csdsi/cleaned_paper_analysis/code
+# below is Hamsi's:
+# code_path=/cbica/projects/csdsi/cleaned_paper_analysis/code
+# replication:
+code_path="/cbica/projects/csdsi/replication/cs_dsi/code"
 
 echo Running Python Script: $script
 echo Passed Variables: $2 $3 $4 $5 $6 $7 $8 $9
 # top -b -U csdsi > /cbica/projects/csdsi/BIDS/gridlog/get_odf/${2}_${3}_memory.txt
 echo "Process Start - `date`"
-/cbica/projects/csdsi/miniconda3/envs/flywheel/bin/python ${code_path}/$script $2 $3 $4 $5 $6 $7 $8 $9 
+# below is Hamsi's:
+# /cbica/projects/csdsi/miniconda3/envs/flywheel/bin/python ${code_path}/$script $2 $3 $4 $5 $6 $7 $8 $9 
+# replication:
+/cbica/projects/csdsi/miniconda3/envs/replication/bin/python ${code_path}/$script $2 $3 $4 $5 $6 $7 $8 $9 
+
 echo "Process Finish - `date`"
