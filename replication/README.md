@@ -22,6 +22,8 @@ Full list of instances:
 # Steps
 - [step2p4p1_extrapolate.md](step2p4p1_extrapolate.md)
 - [step2p4p2_GQI_recon.md](step2p4p2_GQI_recon.md)
+    - this also includes step 2.6 generate scalar maps
+- [step2p5_bundle_seg.md](step2p5_bundle_seg.md)
 
 # Tricks
 ## Python on csdsi:
