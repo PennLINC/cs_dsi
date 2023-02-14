@@ -1,5 +1,5 @@
 # Main analysis for streamlines:
-Documentation for all the analysis steps *after* creating the bundle specific masks in dsi-studio for all cases. All datafiles created here will be within `/cbica/csdsi/cleaned_paper_analysis/data`
+Documentation for all the analysis steps *after* creating the bundle specific masks in dsi-studio for all cases. All datafiles created here will be within `/cbica/csdsi/cleaned_paper_analysis/bug_fix/data`
 
 FIXING DUPLICATION BUG THAT CHENYING FOUND
 
