@@ -33,7 +33,7 @@ def pairwise_r(img_path1, img_path2, mask_path):
 
 def main():
     # Initialize and create output path:
-    odir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/pearson_correlations/"+grp+"/"+met+"_"+tt+"/"
+    odir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/pearson_correlations/"+grp+"/"+met+"_"+tt+"/"
     os.makedirs(odir, exist_ok=True)
 
     # Figure dataset to pull from and initialize subjects and sessions:
@@ -68,6 +68,10 @@ def main():
                     df.loc[p[0],p[1]] = pairwise_r(img_path1, img_path2, mask_path)
                 else:
                     df.loc[p[0],p[1]] = np.nan # if image doesn't exist, unlikely
+
+                # BUG FIX: Delete lower triangle to remove redundant pairs
+                df[:] = np.where(np.arange(8)[:,None] >= np.arange(8),np.nan,df)
+
             df.loc[:,'Subject'] = sub
             df_full = pd.concat([df_full, df])
         df_full.to_csv(odir+"all_subjects.csv")
@@ -111,6 +115,10 @@ def main():
                         df.loc[p[0],p[1]] = pairwise_r(img_path1, img_path2, mask_path)
                     else:
                         df.loc[p[0],p[1]] = np.nan # if bundle wasn't detected for this subject/session/acquisition
+
+                    # FIX: Wasn't a bug, but asserting that within-accuracy values aren't here:
+                    if p[0] == p[1]:
+                        df.loc[p[0],p[1]] = np.nan # removing same session accuracy
                 df.loc[:,'Subject'] = sub
                 df_full = pd.concat([df_full, df])
             df_full.to_csv(odir+"all_subjects_"+acq+".csv")
@@ -132,6 +140,8 @@ def main():
                         df.loc[p[0],p[1]] = pairwise_r(img_path1, img_path2, mask_path)
                     else:
                         df.loc[p[0],p[1]] = np.nan # if bundle wasn't detected for this subject/session/acquisition
+                # BUG FIX: Delete lower triangle to remove redundant pairs
+                df[:] = np.where(np.arange(8)[:,None] >= np.arange(8),np.nan,df)
                 df.loc[:,'Subject'] = sub
                 df_full = pd.concat([df_full, df])
             df_full.to_csv(odir+"all_subjects_"+acq+".csv")

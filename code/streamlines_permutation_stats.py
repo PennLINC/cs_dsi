@@ -7,10 +7,11 @@ import plotnine as pn
 from scipy.stats import distributions
 import sys
 
-indir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/dice_scores/permutation_stats/"
+indir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/dice_scores/permutation_stats/"
 cs_acqs = ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2", "RAND57"]
 
 grp = sys.argv[1]
+
 
 def get_stats_df(grp):
     os.makedirs(indir+grp+"/all_tracks/", exist_ok=True)
@@ -19,12 +20,15 @@ def get_stats_df(grp):
     all_null_df = pd.DataFrame()
     stats_df = pd.DataFrame(columns=["Track", "Acquisition", "Subject Median", "p-value"])
     for trk in trks:
+        print(trk)
         null_df = pd.read_csv(indir+grp+"/"+trk+"/null_distribution.csv")
+
         med_df = pd.read_csv(indir+grp+"/"+trk+"/median_deviation.csv")
         all_null_df = pd.concat([all_null_df, null_df])
         for acq in cs_acqs:
             acq_med = med_df[med_df["Acquisition"]==acq]["Median Difference"].median()
             null_medians = null_df[null_df["Acquisition"]==acq]["Median Difference"]
+            print(null_medians.shape)
             # Get p-value:
             falsepos_count = np.count_nonzero(null_medians>acq_med)
             p_value = falsepos_count / null_medians.shape[0]
