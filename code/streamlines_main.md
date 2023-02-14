@@ -109,4 +109,4 @@ python correlate_fullDSI_rel.py $grp
 done
 ```
 
-### Supplementary tables are made in `Supplementary Tables.ipynb`
+### Supplementary tables are made in [Supplementary Tables.ipynb](Supplementary Tables.ipynb)
