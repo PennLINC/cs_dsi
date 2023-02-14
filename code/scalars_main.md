@@ -67,4 +67,4 @@ for met in nqa gfa iso; do
 python scalars_permutation_stats.py $grp ${met}_mask
 done; done
 ```
-### Supplementary tables are made in `Supplementary Tables.ipynb`
+#### Supplementary tables are made in [Supplementary Tables.ipynb](https://github.com/PennLINC/cs_dsi/blob/bug_fix/code/Supplementary%20Tables.ipynb)
