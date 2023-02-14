@@ -1,5 +1,5 @@
 # Main analysis for scalars:
-Documentation for all the analysis steps *after* getting voxel-wise scalars in subject-space. All datafiles created here will be within `/cbica/csdsi/cleaned_paper_analysis/data`
+Documentation for all the analysis steps *after* getting voxel-wise scalars in subject-space. All datafiles created here will be within `/cbica/csdsi/cleaned_paper_analysis/bug_fix/data`
 
 Start with setting up our terminal:
 ```bash
