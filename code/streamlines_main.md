@@ -28,6 +28,7 @@ Just for this section, we add another analysis group: `retro_fulldsi_btwn_rel` t
 
 
 **BUG FIX: On lines 76 and 144: Deleted lower triangle of matrix for reliability cases so that pair-wise values are not repeated.**
+
 **EDIT: Lines 121-122: Wasn't a bug, but asserting that same-scan accuracy values were not in between-scan accuracy table**
 
 ```bash
@@ -107,3 +108,5 @@ for grp in "${grps[@]}"; do
 python correlate_fullDSI_rel.py $grp 
 done
 ```
+
+### Supplementary tables are made in `Supplementary Tables.ipynb`
