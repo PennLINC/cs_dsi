@@ -37,7 +37,7 @@ def pairwise_dice(img_path1, img_path2):
     
 def main():
     # Initialize and create output path:
-    #odir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/dice_scores/"+grp+"/"+trk+"/"
+    #odir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/dice_scores/"+grp+"/"+trk+"/"
     # for replication:
     odir = "/cbica/projects/csdsi/replication/data/dice_scores/"+grp+"/"+trk+"/"
     os.makedirs(odir, exist_ok=True)
@@ -48,6 +48,7 @@ def main():
         subjects = ["0001a", "1041h", "1665h", "2211h", "3058s", "4558a", "4936m", "0097p", "1043f", "1808u", "2453z", "3571z", "4662a", "4961a", "0444g", "1142k", "1853b", "2741x", "3832y", "4680i", "1145h", "2755j", "3992u", "4917f"]
         sessions = ["1", "2", "3", "4", "5", "6", "7", "8"]
         pairwise_sessions = list(permutations(sessions, 2)) #get list of pairwise session combinations
+        # ^^ CZ: this is ordered, i.e., including both ('1', '2'), and ('2', '1'), total 2P8 = 8x7=56
         indir = "/cbica/projects/csdsi/dsistudio_full/dsi_derivatives/crash_retro/"
 
     if datagrp == "prosp":
@@ -73,6 +74,10 @@ def main():
                     df.loc[p[0],p[1]] = pairwise_dice(img_path1, img_path2)
                 else:
                     df.loc[p[0],p[1]] = np.nan # if bundle wasn't detected for this subject/session/acquisition
+                
+                # BUG FIX: Delete lower triangle to remove redundant pairs
+                df[:] = np.where(np.arange(8)[:,None] >= np.arange(8),np.nan,df)
+                
             df.loc[:,'Subject'] = sub
             df_full = pd.concat([df_full, df])
         df_full.to_csv(odir+"all_subjects.csv")
@@ -114,6 +119,10 @@ def main():
                         df.loc[p[0],p[1]] = pairwise_dice(img_path1, img_path2)
                     else:
                         df.loc[p[0],p[1]] = np.nan # if bundle wasn't detected for this subject/session/acquisition
+                    
+                    # FIX: Wasn't a bug, but asserting that within-accuracy values aren't here:
+                    if p[0] == p[1]:
+                        df.loc[p[0],p[1]] = np.nan # removing same session accuracy
                 df.loc[:,'Subject'] = sub
                 df_full = pd.concat([df_full, df])
             df_full.to_csv(odir+"all_subjects_"+acq+".csv")
@@ -133,6 +142,9 @@ def main():
                         df.loc[p[0],p[1]] = pairwise_dice(img_path1, img_path2)
                     else:
                         df.loc[p[0],p[1]] = np.nan # if bundle wasn't detected for this subject/session/acquisition
+                
+                # BUG FIX: Delete lower triangle to remove redundant pairs
+                df[:] = np.where(np.arange(8)[:,None] >= np.arange(8),np.nan,df)
                 df.loc[:,'Subject'] = sub
                 df_full = pd.concat([df_full, df])
             df_full.to_csv(odir+"all_subjects_"+acq+".csv")

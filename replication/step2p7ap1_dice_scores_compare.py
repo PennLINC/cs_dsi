@@ -14,7 +14,7 @@ grp="prosp_wthn_acc"
 trk="Cingulum_Parahippocampal_R"
 filename_csv="ses-1_ind.csv"
 
-folder_main_output_Hamsi = "/cbica/projects/csdsi/cleaned_paper_analysis/data/dice_scores"
+folder_main_output_Hamsi = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/dice_scores"
 folder_main_output_replication = "/cbica/projects/csdsi/replication/data/dice_scores"
 
 folder_output_Hamsi = op.join(folder_main_output_Hamsi, grp, trk)
