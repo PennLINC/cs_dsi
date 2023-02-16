@@ -1,5 +1,7 @@
 Step 2.7a permutation tests for streamlines
 
+My sanity checks over step 1-2: `replication/step2p7a_checks.py`
+
 # step 1. Get dice score
 - main script: `code/get_dice_scores.py`
     - I copied it as `*_replication.py` where I changed the output dir
