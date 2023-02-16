@@ -26,7 +26,7 @@ def make_violin_friendly_frames(trk):
             new_df.loc[:, "Acquisition"] = acq_dict[acq]
             comb_df = pd.concat([comb_df, new_df], ignore_index=True)
         comb_df = comb_df.dropna()
-        expected_nofail = 24 * 8 * 6 + 24 * 28 #CS-DSI same-scan Accuracy (24 subjects, 8 sessions, 6 CS-DSI schemes) + Full DSI reliability (24 sessions, 28 pairs)
+        expected_nofail = 24 * 8 * 6 + 24 * 28 #CS-DSI same-scan Accuracy (24 subjects, 8 sessions, 6 CS-DSI schemes) + Full DSI reliability (24 subjects, 28 pairs per subject)
         
     if grp == "retro_btwn_acc":
         comb_df = pd.DataFrame(columns=["Dice", "Acquisition"])
@@ -40,7 +40,7 @@ def make_violin_friendly_frames(trk):
             new_df.loc[:, "Acquisition"] = acq_dict[acq]
             comb_df = pd.concat([comb_df, new_df], ignore_index=True)
         comb_df = comb_df.dropna()
-        expected_nofail = 24 * 56 * 6 + 24 * 28 #CS-DSI inter-scan Accuracy (24 subjects 56 pairs, 6 CS-DSI schemes) + Full DSI reliability (24 sessions, 28 pairs)
+        expected_nofail = 24 * 56 * 6 + 24 * 28 #CS-DSI inter-scan Accuracy (24 subjects 56 pairs, 6 CS-DSI schemes) + Full DSI reliability (24 subjects, 28 pairs per subject)
        
 
     if grp == "retro_btwn_rel":
@@ -55,7 +55,7 @@ def make_violin_friendly_frames(trk):
             new_df.loc[:, "Acquisition"] = acq_dict[acq]
             comb_df = pd.concat([comb_df, new_df], ignore_index=True)
         comb_df = comb_df.dropna()
-        expected_nofail = 24 * 28 * 7 #CS-DSI inter-scan reliability (24 subjects, 28 pairs, 6 CS-DSI schemes) + Full DSI reliability (24 sessions, 28 pairs)
+        expected_nofail = 24 * 28 * 7 #CS-DSI inter-scan reliability (24 subjects, 28 pairs, 6 CS-DSI schemes) + Full DSI reliability (24 subjects, 28 pairs per subject)
 
     if grp == "prosp_wthn_acc":
         acq_df = pd.read_csv(indir+"ses-1_ind.csv")
@@ -68,7 +68,7 @@ def make_violin_friendly_frames(trk):
             new_df.loc[:, "Acquisition"] = acq_dict[acq]
             comb_df = pd.concat([comb_df, new_df], ignore_index=True)    
         comb_df = comb_df.dropna()
-        expected_nofail = 20 * 6 + 24 * 28 #CS-DSI same-scan Accuracy (20 subjects, 1 session, 6 CS-DSI schemes) + Full DSI reliability (24 sessions, 28 pairs)
+        expected_nofail = 20 * 6 + 24 * 28 #CS-DSI same-scan Accuracy (20 subjects, 1 session, 6 CS-DSI schemes) + Full DSI reliability (24 subjects, 28 pairs per subject)
 
     comb_df.to_csv(indir+"data_violin-friendly.csv")
 

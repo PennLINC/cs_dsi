@@ -70,7 +70,7 @@ python make_violins_streamlines.py $grp
 done
 ```
 
-### 4. Permutation Testing:
+### 5. Permutation Testing:
 Permutation testing to get p values. These results are just in the supplementary. The permutations for each case is different enough to warrant a separate script. These take about 5 minutes per track, per group. During bug fixing, CUBIC was very busy and jobs weren't being scheduled, so I just ran this directly on three different cubic terminals (one for each validation metric).
 ```bash
 for trk in "${trks[@]}"; do
@@ -99,7 +99,7 @@ python streamlines_permutation_stats.py $grp all_tracks
 done
 ```
 
-### 5. Get relationships with full DSI reliability
+### 6. Get relationships with full DSI reliability
 Calculating the collinearity between CS-DSI validity metrics and full DSI reliability.
 *Figures 6b, 6d, 7b, 9b*
 ```bash
