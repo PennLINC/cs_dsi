@@ -12,6 +12,10 @@ def make_violin_friendly_frames(trk):
     indir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/dice_scores/"+grp+"/"+trk+"/"
     # for replication:
     indir_tosave = "/cbica/projects/csdsi/replication/data/dice_scores/"+grp+"/"+trk+"/"
+    # need to make it for replication purpose:
+    if not os.path.exists(indir_tosave):
+        os.makedirs(indir_tosave, exist_ok=True)
+
     fulldsi_df = pd.read_csv("/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/dice_scores/retro_fulldsi_btwn_rel/"+trk+"/all_subjects.csv")
 
     comb_df = pd.DataFrame(columns=["Dice", "Acquisition"])
@@ -81,7 +85,7 @@ def make_violin_friendly_frames(trk):
     # hamsi's:
     # folder_sanity_check = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/sanity_check/"
     # replication:
-    folder_sanity_check = "/cbica/projects/csdsi/replication/data/sanity_check"
+    folder_sanity_check = "/cbica/projects/csdsi/replication/data/sanity_check/"
 
     os.makedirs(folder_sanity_check, exist_ok=True)
     difference = expected_nofail-comb_df.shape[0]

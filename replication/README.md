@@ -1,8 +1,7 @@
 This is to replicate results reported in the manuscript.
 Replicator: Chenying Zhao
 
-# Current problems to fix:
-- table 1 - number of dir in cs-dsi scheme 
+<!--- # Current problems to fix: --->
 
 # Overview
 Full list of instances:

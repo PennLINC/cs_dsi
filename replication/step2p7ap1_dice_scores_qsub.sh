@@ -1,13 +1,19 @@
 #!/bin/bash
 
 # grp="retro_fulldsi_btwn_rel"
-# trk="Corpus_Callosum_Body"
+# #trk="Corpus_Callosum_Body"
+# trk="Cingulum_Parahippocampal_R"
 
+grp="retro_btwn_rel"
+trk="Corticospinal_Tract_R"
+
+# -------- before fix: ----------------
 # grp="retro_wthn_acc"
 # trk="Corticostriatal_Tract_Anterior_L"
 
-grp="prosp_wthn_acc"
-trk="Cingulum_Parahippocampal_R"
+# grp="prosp_wthn_acc"
+# trk="Cingulum_Parahippocampal_R"
+# ----------------------------------
 
 
 folder_logs="/cbica/projects/csdsi/replication/data/logs"
