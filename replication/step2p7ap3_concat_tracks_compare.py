@@ -2,11 +2,9 @@ import os
 import os.path as op
 import pandas as pd
 
-# grp="prosp_wthn_acc"
-# trk = "Corpus_Callosum_Forceps_Major"
-
 grp="retro_btwn_rel"
-trk="Superior_Longitudinal_Fasciculus1_L"
+
+trk = "all_tracks"
 
 filename_csv = "data_violin-friendly.csv"
 

@@ -16,12 +16,17 @@ My sanity checks over step 1-2: `replication/step2p7a_checks.py`
 - main script: `code/make_tidydata_streamlines_replication.py`
 - very quick, directly run in interactive node
 
+# step 3. concat
 
+...
 
+# step 6. correlations
+- output: 
+    - figures: ``
+    - statistics results (csv): `dice_scores/${grp}/all_tracks_medians*.csv`
+        - there are two csvs
 
 ----------- OLD ------------
-# step 2. Concat tracks' results
-TODO: after having an minor fix of argument by Hamsi in main branch
 
 # step 3. Violin plots
 ## step 3.1 violin (or csv) per track
