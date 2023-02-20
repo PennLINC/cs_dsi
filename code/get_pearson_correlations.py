@@ -25,8 +25,8 @@ def pairwise_r(img_path1, img_path2, mask_path):
     img2, _ = load_nifti(img_path2)
     mimg, _ = load_nifti(mask_path)
     rdf = pd.DataFrame() #something weird is happening with the arrays
-    rdf["x"] = np.ma.masked_where(mimg <= 0.5, img1).flatten() #to make compatible with the prob masks
-    rdf["y"] = np.ma.masked_where(mimg <= 0.5, img2).flatten() #to make compatible with the prob masks
+    rdf["x"] = np.ma.masked_where(mimg <= 0.5, img1).flatten() #to make compatible with the prob masks.  This only includes voxels that are 1 in the mask as np.ma.masked_where returns values WHERE THE CONDITION IS NOT TRUE. Just confirmed.
+    rdf["y"] = np.ma.masked_where(mimg <= 0.5, img2).flatten() #to make compatible with the prob masks.  This only includes voxels that are 1 in the mask as np.ma.masked_where returns values WHERE THE CONDITION IS NOT TRUE. Just confirmed.
     rdf = rdf.dropna()
     rvalue, _ = pearsonr(rdf["x"], rdf["y"])
     return rvalue
