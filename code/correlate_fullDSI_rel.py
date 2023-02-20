@@ -28,10 +28,10 @@ def get_median_frame():
             if grp == "retro_wthn_acc":
                 df2 = pd.read_csv(indir+"/all_sessions.csv")
                 median = df2[acq].median()
-            if grp == "retro_btwn_acc":
+            if grp == "retro_btwn_rel":
                 df2 = pd.read_csv(indir+"all_subjects_"+acq+".csv")
                 median = np.median(np.array(df2.drop(["Unnamed: 0", "Subject"], axis=1))[np.triu_indices(8, k = 1)])
-            if grp == "retro_btwn_rel":
+            if grp == "retro_btwn_acc":
                 df2 = pd.read_csv(indir+"all_subjects_"+acq+".csv")
                 flattened = np.array(df2.drop(["Unnamed: 0", "Subject"], axis=1)).flatten()
                 median = np.median(flattened[~np.isnan(flattened)]) #with nans removed
