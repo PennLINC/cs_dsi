@@ -22,18 +22,19 @@ def get_median_frame():
     for trk in trks:
         indir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/dice_scores/"+grp+"/"+trk+"/"
         df = pd.read_csv("/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/dice_scores/retro_fulldsi_btwn_rel/"+trk+"/"+"/all_subjects.csv")
-        median_sc = df.drop(["Unnamed: 0", "Subject"], axis=1).median().median()
+        median_sc = np.median(np.array(df.drop(["Unnamed: 0", "Subject"], axis=1))[np.triu_indices(8, k = 1)])
         median_df.loc[trk, "Full DSI Reliability"] = median_sc
         for acq in cs_acquisitions:
             if grp == "retro_wthn_acc":
                 df2 = pd.read_csv(indir+"/all_sessions.csv")
                 median = df2[acq].median()
-            if grp == "retro_btwn_acc":
-                df2 = pd.read_csv(indir+"all_subjects_"+acq+".csv")
-                median = df2.drop(["Unnamed: 0", "Subject"], axis=1).median().median()
             if grp == "retro_btwn_rel":
                 df2 = pd.read_csv(indir+"all_subjects_"+acq+".csv")
-                median = df2.drop(["Unnamed: 0", "Subject"], axis=1).median().median()
+                median = np.median(np.array(df2.drop(["Unnamed: 0", "Subject"], axis=1))[np.triu_indices(8, k = 1)])
+            if grp == "retro_btwn_acc":
+                df2 = pd.read_csv(indir+"all_subjects_"+acq+".csv")
+                flattened = np.array(df2.drop(["Unnamed: 0", "Subject"], axis=1)).flatten()
+                median = np.median(flattened[~np.isnan(flattened)]) #with nans removed
             if grp == "prosp_wthn_acc":
                 df2 = pd.read_csv(indir+"ses-1_ind.csv")
                 median = df2[acq].median()
@@ -43,13 +44,14 @@ def get_median_frame():
 def get_stats_and_linregress(median_df):
     # Get line of best fit:
     fit_df = pd.DataFrame()
-    r_df = pd.DataFrame(index = cs_acquisitions, columns = ["Rsq", "Slope", "p-value"]) 
+    r_df = pd.DataFrame(index = cs_acquisitions, columns = ["R", "Rsq", "Slope", "p-value"]) 
     fit_df["Full DSI Reliability"] = median_df["Full DSI Reliability"]
 
     for acq in cs_acquisitions:
         s, i, r, p, std = stats.linregress(median_df["Full DSI Reliability"].astype(float), median_df[acq].astype(float))
         fit_df[acq] = median_df["Full DSI Reliability"]*s + i
         fit_df["raw_"+acq] = median_df[acq]
+        r_df.loc[acq, "R"] = r
         r_df.loc[acq, "Rsq"] = r**2
         r_df.loc[acq, "Slope"] = s
         r_df.loc[acq, "p-value"] = p
@@ -73,6 +75,14 @@ def main():
         get_median_frame()
     median_df= pd.read_csv("/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/dice_scores/"+grp+"/"+mtrk+"_medians.csv")
     fit_df = get_stats_and_linregress(median_df).astype(float)
+    print(grp)
+    print(np.max(fit_df["Full DSI Reliability"]))
+    print(np.min(fit_df["Full DSI Reliability"]))
+    print(np.max(fit_df["HASC92-55_run-01"]))
+    print(np.min(fit_df["raw_RAND57"]))
+
+
+
     ylab = get_figure_specs()
     fig = (pn.ggplot(data = fit_df) \
        + pn.geom_abline(intercept=0, slope=1, color="gray", alpha=0.5, linetype="dashed", size=1.5) \
@@ -98,7 +108,7 @@ def main():
             panel_grid_major = pn.element_blank(), \
             panel_grid_minor = pn.element_blank()) \
         + pn.xlab("Full DSI between-session Reliability") + pn.ylab(ylab) \
-        + pn.xlim(0.7, 0.88) + pn.ylim(0.55, 0.9)  
+        + pn.xlim(0.7, 0.9) + pn.ylim(0.5, 0.9)  
 
         
     fig.save(filename = odir+mtrk+"_notitle_x07-88.svg", dpi=500)
