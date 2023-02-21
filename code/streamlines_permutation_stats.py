@@ -25,12 +25,9 @@ def get_stats_df(grp):
         for acq in cs_acqs:
             acq_med = med_df[med_df["Acquisition"]==acq]["Median Difference"].median()
             null_medians = null_df[null_df["Acquisition"]==acq]["Median Difference"]
-            # Get p-value:
-            falsepos_count = np.count_nonzero(null_medians>acq_med)
+            # FIX: Get p-value: #https://thomasleeper.com/Rcourse/Tutorials/permutationtests.html
+            falsepos_count = np.count_nonzero(np.abs(null_medians)>np.abs(acq_med)) #taking the absolute value instead.
             p_value = falsepos_count / null_medians.shape[0]
-            if p_value > 0.5:
-                falsepos_count = np.count_nonzero(null_medians<acq_med)
-                p_value = falsepos_count / null_medians.shape[0]
             stats_df = pd.concat([stats_df, pd.DataFrame([[trk, acq, acq_med, p_value]], columns=["Track", "Acquisition", "Subject Median", "p-value"])])
     stats_df.to_csv(indir+grp+"/all_tracks/subject_medians_all_stats.csv")
     return stats_df, all_null_df.sample(frac=0.1)
