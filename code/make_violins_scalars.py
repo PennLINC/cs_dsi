@@ -6,7 +6,14 @@ import plotnine as pn
 grp = sys.argv[1] #Analysis group
 met = sys.argv[2]
 tt = "mask" #tissue type: whole brain (if you want just white matter, change to wm)
-
+if met == "nqa":
+    yran = [0.75,1]
+if met == "gfa":
+    yran = [0.75,1]
+if met == "iso":
+    yran = [0.875,1]
+if grp == "prosp_wthn_acc":
+    yran = [0.75,1]
 odir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/figs/pearson_violins/"+grp+"/"+met+"_"+tt+"/"
 os.makedirs(odir, exist_ok=True)
 
@@ -68,7 +75,7 @@ def main():
                 panel_grid_minor = pn.element_blank()) \
         + pn.labels.xlab("Acquisition Scheme") \
         + pn.labels.ylab("Pearson R") \
-        + pn.ylim(0.88,1)
+        + pn.ylim(yran[0], yran[1])
     fig = thme \
         + pn.geom_violin(size = 1.5, data = comb_df, scale = 'width', show_legend = False, trim=True) \
         + pn.geom_boxplot(width=0.2, fill="white", outlier_alpha=0, show_legend = False)
