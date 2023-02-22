@@ -24,7 +24,7 @@ def get_stats_df(grp):
         for acq in cs_acqs:
             acq_med = med_df[med_df["Acquisition"]==acq]["Median Difference"].median()
             null_medians = null_df[null_df["Acquisition"]==acq]["Median Difference"]
-            print(null_medians.shape)
+
             # FIX: Get p-value: #https://thomasleeper.com/Rcourse/Tutorials/permutationtests.html
             falsepos_count = np.count_nonzero(np.abs(null_medians)>np.abs(acq_med)) #taking the absolute value instead.
             p_value = falsepos_count / null_medians.shape[0]
