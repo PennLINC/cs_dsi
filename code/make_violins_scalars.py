@@ -4,70 +4,18 @@ import os
 import plotnine as pn
 
 grp = sys.argv[1] #Analysis group
-met = sys.argv[2] #metric
-tt = "mask" #tissue type. "mask" = whole brain; "wm" = white matter only
-indir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/pearson_correlations/"+grp+"/"+met+"_"+tt+"/"
-fulldsi_df = pd.read_csv("/cbica/projects/csdsi/cleaned_paper_analysis/data/pearson_correlations/retro_fulldsi_btwn_rel/"+met+"_"+tt+"/all_subjects.csv")
-odir = "/cbica/projects/csdsi/cleaned_paper_analysis/figs/pearson_violins/"+grp+"/"+met+"_"+tt+"/"
+met = sys.argv[2]
+tt = "mask" #tissue type: whole brain (if you want just white matter, change to wm)
+if met == "nqa":
+    yran = [0.75,1]
+if met == "gfa":
+    yran = [0.75,1]
+if met == "iso":
+    yran = [0.875,1]
+if grp == "prosp_wthn_acc":
+    yran = [0.75,1]
+odir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/figs/pearson_violins/"+grp+"/"+met+"_"+tt+"/"
 os.makedirs(odir, exist_ok=True)
-
-def make_violin_friendly_frames():
-    """
-    Tidies up the dataframe, such that schemes are rows and not columns. Need to do this to make the dataframe plottable with plotnine. Just saves the tidy dataframe.
-    """
-    comb_df = pd.DataFrame(columns=["PearsonR", "Acquisition"])
-    acq_dict = {"HASC92-55_run-01":"HA-SC92+55-1", "HASC92-55_run-02":"HA-SC92+55-2",  "HASC92":"HA-SC92", "HASC55_run-01":"HA-SC55-1",  "HASC55_run-02":"HA-SC55-2", "RAND57":"RAND57"} #to rename schemes
-
-    if grp == "retro_wthn_acc":
-        acq_df = pd.read_csv(indir+"all_sessions.csv")
-        comb_df["PearsonR"] = fulldsi_df.drop(["Subject", "Unnamed: 0"],axis=1, errors="ignore").to_numpy().flatten()
-        comb_df.loc[:, "Acquisition"] = "Scan-Rescan DSI*"
-        comb_df = comb_df[comb_df.PearsonR < 1]
-        for acq in acq_dict:
-            new_df = pd.DataFrame(columns=["PearsonR", "Acquisition"])
-            new_df["PearsonR"] = acq_df[acq]
-            new_df.loc[:, "Acquisition"] = acq_dict[acq]
-            comb_df = pd.concat([comb_df, new_df], ignore_index=True)
-        comb_df = comb_df.dropna()
-
-    if grp == "retro_btwn_acc":
-        comb_df = pd.DataFrame(columns=["PearsonR", "Acquisition"])
-        comb_df["PearsonR"] = fulldsi_df.drop(["Subject", "Unnamed: 0"],axis=1, errors="ignore").to_numpy().flatten()
-        comb_df.loc[:, "Acquisition"] = "Scan-Rescan DSI*"
-        comb_df = comb_df[comb_df.PearsonR < 1]
-        for acq in acq_dict:
-            acq_df = pd.read_csv(indir+"all_subjects_"+acq+".csv")
-            new_df = pd.DataFrame(columns=["PearsonR", "Acquisition"])
-            new_df["PearsonR"] = acq_df.drop(["Subject", "Unnamed: 0"],axis=1, errors="ignore").to_numpy().flatten()
-            new_df.loc[:, "Acquisition"] = acq_dict[acq]
-            comb_df = pd.concat([comb_df, new_df], ignore_index=True)
-
-    if grp == "retro_btwn_rel":
-        comb_df = pd.DataFrame(columns=["PearsonR", "Acquisition"])
-        comb_df["PearsonR"] = fulldsi_df.drop(["Subject", "Unnamed: 0"],axis=1, errors="ignore").to_numpy().flatten()
-        comb_df.loc[:, "Acquisition"] = "Full DSI"
-        comb_df = comb_df[comb_df.PearsonR < 1]
-        for acq in acq_dict:
-            acq_df = pd.read_csv(indir+"all_subjects_"+acq+".csv")
-            new_df = pd.DataFrame(columns=["PearsonR", "Acquisition"])
-            new_df["PearsonR"] = acq_df.drop(["Subject", "Unnamed: 0"],axis=1, errors="ignore").to_numpy().flatten()
-            new_df.loc[:, "Acquisition"] = acq_dict[acq]
-            comb_df = pd.concat([comb_df, new_df], ignore_index=True)
-
-    if grp == "prosp_wthn_acc":
-        acq_df = pd.read_csv(indir+"ses-1_ind.csv")
-        comb_df["PearsonR"] = fulldsi_df.drop(["Subject", "Unnamed: 0"],axis=1, errors="ignore").to_numpy().flatten()
-        comb_df.loc[:, "Acquisition"] = "Scan-Rescan DSI**"
-        comb_df = comb_df[comb_df.PearsonR < 1]
-        for acq in acq_dict:
-            new_df = pd.DataFrame(columns=["PearsonR", "Acquisition"])
-            new_df["PearsonR"] = acq_df[acq]
-            new_df.loc[:, "Acquisition"] = acq_dict[acq]
-            comb_df = pd.concat([comb_df, new_df], ignore_index=True)    
-    
-    comb_df = comb_df.dropna()
-    comb_df = comb_df[comb_df.PearsonR < 1] #just double checking
-    comb_df.to_csv(indir+"data_violin-friendly.csv")
 
 def get_figure_specs(comb_df):
     """
@@ -109,8 +57,7 @@ def get_figure_specs(comb_df):
     return palette_col, palette_fill, cat, comb_df
         
 def main():
-    if os.path.exists(indir+"data_violin-friendly.casv") == False:
-        make_violin_friendly_frames()
+    indir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/pearson_correlations/"+grp+"/"+met+"_"+tt+"/"
     comb_df = pd.read_csv(indir+"data_violin-friendly.csv")
     palette_col, palette_fill, cat, comb_df = get_figure_specs(comb_df)
     base = pn.ggplot(comb_df, pn.aes(x=cat, y="PearsonR", fill=cat, color=cat, stroke=2)) \
@@ -128,7 +75,7 @@ def main():
                 panel_grid_minor = pn.element_blank()) \
         + pn.labels.xlab("Acquisition Scheme") \
         + pn.labels.ylab("Pearson R") \
-        + pn.ylim(0.88,1)
+        + pn.ylim(yran[0], yran[1])
     fig = thme \
         + pn.geom_violin(size = 1.5, data = comb_df, scale = 'width', show_legend = False, trim=True) \
         + pn.geom_boxplot(width=0.2, fill="white", outlier_alpha=0, show_legend = False)

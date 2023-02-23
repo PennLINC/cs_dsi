@@ -3,7 +3,6 @@ import pandas as pd
 import os
 import seaborn as sns
 import matplotlib.pyplot as plt
-import plotnine as pn
 from scipy.stats import distributions
 import sys
 import random
@@ -14,23 +13,25 @@ cs_acqs = ["HASC92-55_run-01", "HASC92-55_run-02",  "HASC92", "HASC55_run-01",  
 subjects=["0001a", "1041h", "1665h", "2211h", "3058s", "4558a", "4936m", "0097p", "1043f", "1808u", "2453z", "3571z", "4662a", "4961a", "0444g", "1142k", "1853b", "2741x", "3832y", "4680i", "1145h", "2755j", "3992u", "4917f"]
 
 if dtype == "streamlines":
-    indir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/dice_scores/"
-    odir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/dice_scores/permutation_stats/retro_wthn_acc/"
+    indir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/dice_scores/"
+    odir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/dice_scores/permutation_stats/retro_wthn_acc/"
 
 if dtype == "scalars":
-    indir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/pearson_correlations/"
-    odir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/pearson_correlations/permutation_stats/retro_wthn_acc/"
+    indir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/pearson_correlations/"
+    odir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/pearson_correlations/permutation_stats/retro_wthn_acc/"
+
 
 os.makedirs(odir+trc, exist_ok=True)
 
-def get_median_and_null(trc, sub, acq, nperms=100):
+def get_median_and_null(trc, sub, acq, nperms=1000):
     # Load both dataframes:
     sr_df = pd.read_csv(indir+"retro_fulldsi_btwn_rel/"+trc+"/all_subjects.csv")
     acq_df = pd.read_csv(indir+"retro_wthn_acc/"+trc+"/all_sessions.csv")
 
     # Isolate subject
     # Melt scan-rescan dataframe into a single array, and get acquisition-specific accuracy in a different array:
-    sr_sub = np.array(sr_df[sr_df["Subject"]==sub].drop(["Unnamed: 0", "Subject"], axis=1))[np.triu_indices(8, k = 1)]
+    sr_sub = np.array(sr_df[sr_df["Subject"]==sub].drop(["Unnamed: 0", "Subject"], axis=1))[np.triu_indices(8, k = 1)] #only getting upper triangle, so we good.
+
     acq_sub = np.array(acq_df[acq_df["Subject"]==sub][acq])
 
     # Create tidy data:
@@ -69,7 +70,7 @@ def get_median_and_null(trc, sub, acq, nperms=100):
     return true_median, shuffled_median_arr, p_value
 
 
-def get_distribution(trc, sub, plot=True, nperms=100):
+def get_distribution(trc, sub, plot=True, nperms=1000):
     cs_acqs = ["HASC92-55_run-01", "HASC92-55_run-02",  "HASC92", "HASC55_run-01",  "HASC55_run-02", "RAND57"]
     stats_df = pd.DataFrame(index=cs_acqs, columns=["Median Difference", "P-Value"])
     null_violin_df = pd.DataFrame(columns=["Median Difference", "Acquisition"])
@@ -84,7 +85,7 @@ def get_distribution(trc, sub, plot=True, nperms=100):
     return null_violin_df, stats_df
 
 
-def all_subs_single_tract(trc, nperms=100):
+def all_subs_single_tract(trc, nperms=1000):
     null_violin_dict = {}
     stats_dict = {}
     for sub in subjects:
@@ -114,7 +115,14 @@ def all_subs_single_tract(trc, nperms=100):
         cs_median_df["Median Difference"] = med_arr
         cs_median_df["Acquisition"] = acq
         all_sub_median_df = pd.concat([all_sub_median_df,cs_median_df])
-        
+
+    all_sub_null_violin_df = all_sub_null_violin_df.replace(["HASC92-55_run-01", "HASC92-55_run-02",  "HASC92", "HASC55_run-01",  "HASC55_run-02"], 
+                            ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2"])
+    cat = pd.Categorical(all_sub_null_violin_df["Acquisition"], categories = ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2", "RAND57"])
+    all_sub_median_df = all_sub_median_df.replace(["HASC92-55_run-01", "HASC92-55_run-02",  "HASC92", "HASC55_run-01",  "HASC55_run-02"], 
+                            ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2"])
+    cat2 = pd.Categorical(all_sub_median_df["Acquisition"], categories = ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2", "RAND57"])
+    
     
     return all_sub_null_violin_df, all_sub_median_df, all_sub_median_df_untidy, all_sub_p_df
     

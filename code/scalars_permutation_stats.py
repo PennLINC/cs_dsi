@@ -7,7 +7,7 @@ import plotnine as pn
 from scipy.stats import distributions
 import sys
 
-indir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/pearson_correlations/permutation_stats/"
+indir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/pearson_correlations/permutation_stats/"
 cs_acqs = ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2", "RAND57"]
 
 grp = sys.argv[1]

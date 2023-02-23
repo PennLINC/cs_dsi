@@ -3,7 +3,6 @@ import pandas as pd
 import os
 import seaborn as sns
 import matplotlib.pyplot as plt
-import plotnine as pn
 from scipy.stats import distributions
 import sys
 import random
@@ -14,13 +13,15 @@ cs_acqs = ["HASC92-55_run-01", "HASC92-55_run-02",  "HASC92", "HASC55_run-01",  
 subjects=["0001a", "1041h", "1665h", "2211h", "3058s", "4558a", "4936m", "0097p", "1043f", "1808u", "2453z", "3571z", "4662a", "4961a", "0444g", "1142k", "1853b", "2741x", "3832y", "4680i", "1145h", "2755j", "3992u", "4917f"]
 
 if dtype == "streamlines":
-    indir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/dice_scores/"
-    odir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/dice_scores/permutation_stats/retro_btwn_rel/"
+    indir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/dice_scores/"
+    odir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/dice_scores/permutation_stats/retro_btwn_rel/"
     der_met = "Dice Score"
 
+
+
 if dtype == "scalars":
-    indir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/pearson_correlations/"
-    odir = "/cbica/projects/csdsi/cleaned_paper_analysis/data/pearson_correlations/permutation_stats/retro_btwn_rel/"
+    indir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/pearson_correlations/"
+    odir = "/cbica/projects/csdsi/cleaned_paper_analysis/bug_fix/data/pearson_correlations/permutation_stats/retro_btwn_rel/"
     der_met = "PearsonR"
 
 
@@ -109,7 +110,14 @@ def all_subs_single_trc(trc, nperms=1000):
 
         cs_median_df["Median Difference"] = med_arr
         cs_median_df["Acquisition"] = acq
-        all_sub_median_df = pd.concat([all_sub_median_df,cs_median_df]) 
+        all_sub_median_df = pd.concat([all_sub_median_df,cs_median_df])
+
+    all_sub_null_violin_df = all_sub_null_violin_df.replace(["HASC92-55_run-01", "HASC92-55_run-02",  "HASC92", "HASC55_run-01",  "HASC55_run-02"], 
+                            ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2"])
+    cat = pd.Categorical(all_sub_null_violin_df["Acquisition"], categories = ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2", "RAND57"])
+    all_sub_median_df = all_sub_median_df.replace(["HASC92-55_run-01", "HASC92-55_run-02",  "HASC92", "HASC55_run-01",  "HASC55_run-02"], 
+                            ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2"])
+    cat2 = pd.Categorical(all_sub_median_df["Acquisition"], categories = ["HA-SC92+55-1", "HA-SC92+55-2",  "HA-SC92", "HA-SC55-1",  "HA-SC55-2", "RAND57"])
     
     return all_sub_null_violin_df, all_sub_median_df, all_sub_median_df_untidy, all_sub_p_df
 
