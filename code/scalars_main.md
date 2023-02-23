@@ -10,10 +10,6 @@ metrics=( nqa gfa iso )
 
 All analysis follows the same design as in `streamlines_main.md`. Bug fixes follow the exact same logic as well. 
 
-**BUG FIX: On lines 73 and 144: Deleted lower triangle of matrix for reliability cases so that pair-wise values are not repeated.**
-
-
-**EDIT: Lines 120-121: Wasn't a bug, but asserting that same-scan accuracy values were not in between-scan accuracy table**
 ### 1. Calculate pearson correlations.
 This first step is to just calculate the pearson correlations for each analysis case and create metric specific CSVs across all participants. 
 We do this in `get_pearson_correlations.py`
@@ -53,7 +49,7 @@ done; done
 ```
 
 ### 3. Permutation Testing:
-**BUG FIX: Line 36 on inter-scan accuracy, to include all pairs. 8P2 instead of 8C2.**
+
 ```bash
 for met in nqa gfa iso; do
 python stats_permute_retro_wthn_acc.py scalars ${met}_mask
